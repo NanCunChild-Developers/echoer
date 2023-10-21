@@ -5,17 +5,22 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.chat_board.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +59,15 @@ public class MainActivity extends Activity implements UIFlasher {
         if(checkPermissions(true)) {
             startBluetoothScan();
         }
+
+        Button goToChat = findViewById(R.id.btn_goToChat);
+        goToChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
