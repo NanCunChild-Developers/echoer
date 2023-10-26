@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.echoer"
-    compileSdk = 34
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.example.echoer"
@@ -40,4 +40,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation ("androidx.cardview:cardview:1.0.0")
 }
