@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Echoer"
 include ':app'
-include ':chat_board'

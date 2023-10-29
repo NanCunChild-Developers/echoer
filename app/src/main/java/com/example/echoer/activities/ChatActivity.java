@@ -1,4 +1,4 @@
-package com.example.chat_board;
+package com.example.echoer.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
-import com.example.app.databinding.ActivityChatBinding;
+import com.example.echoer.databinding.ActivityChatBinding;
+import com.example.echoer.models.ChatMessage;
+import com.example.echoer.adapters.ChatMessageAdapter;
+import com.example.echoer.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
