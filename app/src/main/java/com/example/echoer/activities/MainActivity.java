@@ -1,6 +1,7 @@
 package com.example.echoer.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -9,6 +10,7 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 以下的代码极为丑陋，要不是因为蓝牙广播是非Sticky，我就不用这样了。
         // TODO : 将initial蓝牙检测放进广播类中变成一个方法。
-        if(bluetoothAdapter.getState()==BluetoothAdapter.STATE_ON) UIElementsManager.setBluetoothStateText("蓝牙已开启");
+        if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
+            UIElementsManager.setBluetoothStateText("蓝牙已开启");
         else UIElementsManager.setBluetoothStateText("蓝牙已关闭");
 
         // 去往聊天界面
@@ -101,6 +104,16 @@ public class MainActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             ));
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             textView.setText("Device Name: " + device.getName() + "\nDevice Address: " + device.getAddress());
             UIElementsManager.addViewToDeviceList(textView);
         }

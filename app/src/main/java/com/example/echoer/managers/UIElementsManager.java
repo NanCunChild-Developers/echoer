@@ -32,8 +32,13 @@ public class UIElementsManager {
     }
 
     public static void setWifiStateText(String text) {
-        wifiState.setText(text);
+        if (wifiState != null) {
+            wifiState.setText(text);
+        } else {
+            // 可以在这里添加日志或错误处理
+        }
     }
+
 
     public static void clearDeviceList() {
         devicesDetectedList.removeAllViews();
