@@ -2,7 +2,6 @@ package com.example.echoer.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -15,14 +14,15 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.example.echoer.NetworkBroadcastReceiver;
 import com.example.echoer.managers.PermissionManager;
@@ -34,9 +34,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private final List<BluetoothDevice> scannedDevices = new ArrayList<>();
     private boolean isScanning = false;
     private PermissionManager permissionManager;
+    private ListView deviceListView;
+    private List<ScanResult> scanResultList;
+
     ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -49,13 +51,15 @@ public class MainActivity extends AppCompatActivity {
         public void onBatchScanResults(List<ScanResult> results) {
             // 处理一批扫描结果
             List<String> deviceInfoList = new ArrayList<>();
+            scanResultList = new ArrayList<>();
 
             for (ScanResult result : results) {
                 BluetoothDevice device = result.getDevice();
-                String deviceName = device.getName() != null ? device.getName() : "Unknown Device";
+                @SuppressLint("MissingPermission") String deviceName = device.getName() != null ? device.getName() : "Unknown Device";
                 String deviceAddress = device.getAddress();
                 String deviceInfo = deviceName + " - " + deviceAddress;
                 deviceInfoList.add(deviceInfo);
+                scanResultList.add(result);
                 Log.d("BluetoothScan", "Scan Result: " + result);
                 Log.d("BluetoothScan", "Device Name:" + deviceName + "; Device Address:" + deviceAddress);
             }
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
             // 创建ArrayAdapter并传递给UIElementsManager
             ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, deviceInfoList);
+            deviceListView.setAdapter(adapter);
             UIElementsManager.refreshDeviceList(adapter);
         }
 
@@ -113,19 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
         NetworkBroadcastReceiver.getBluetoothStateReceiverInitial();
 
-<<<<<<< HEAD
-        // 以下的代码极为丑陋，要不是因为蓝牙广播是非Sticky，我就不用这样了。
-        // TODO : 将initial蓝牙检测放进广播类中变成一个方法。
-        if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON)
-            UIElementsManager.setBluetoothStateText("蓝牙已开启");
-        else UIElementsManager.setBluetoothStateText("蓝牙已关闭");
-
-        // 去往聊天界面
-        Button goToChat = findViewById(R.id.btn_goToChat);
-=======
         Button goToChat = findViewById(R.id.btn_goToChat);// 去往聊天界面
         Button startScan = findViewById(R.id.btm_startScan); // 开始扫描
->>>>>>> c56e201787b9fc20c694abf526b3fd913ebd104f
         goToChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,34 +133,35 @@ public class MainActivity extends AppCompatActivity {
                 bluetoothScan(!isScanning);
             }
         });
+
+        deviceListView = findViewById(R.id.deviceListLayout);
+        deviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ScanResult selectedResult = scanResultList.get(position); // deviceList是ScanResult列表
+                openChatActivity(selectedResult);
+            }
+        });
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private void openChatActivity(ScanResult selectedResult) {
+        Intent intent = new Intent(this, ChatActivity.class); // 替换ChatActivity为你的聊天页面Activity
+
+        BluetoothDevice device = selectedResult.getDevice();
+        intent.putExtra("DEVICE_NAME", device.getName());
+        intent.putExtra("DEVICE_ADDRESS", device.getAddress());
+        // 你可以根据需要添加更多参数
+
+        startActivity(intent);
     }
 
 
-    private void renderDeviceList() {
-        // 清空原有的设备列表
-        UIElementsManager.clearDeviceList();
-
-        // 根据扫描到的设备列表创建 TextView 并添加到 LinearLayout
-        for (BluetoothDevice device : scannedDevices) {
-            TextView textView = new TextView(this);
-            textView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            ));
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            textView.setText("Device Name: " + device.getName() + "\nDevice Address: " + device.getAddress());
-            UIElementsManager.addViewToDeviceList(textView);
-        }
-
+    protected void onPause() {
+        super.onPause();
+        bluetoothScan(false);
+    }
 
     @Override
     protected void onResume() {

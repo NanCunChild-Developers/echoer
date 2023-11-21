@@ -58,4 +58,5 @@ public class UIElementsManager {
     public static void setButtonStatus(boolean isEnabled){
         startScan.setEnabled(isEnabled);
     }
+
 }
