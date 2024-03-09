@@ -79,18 +79,13 @@ class SettingDrawer {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
-                    modifier = Modifier
-                        .border(
-                            shape = CircleShape,
-                            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     val image: Painter =
                         painterResource(id = R.drawable.echoer_main_screen_logo)
                     Image(
                         painter = image,
-                        contentDescription = "Portrait",
+                        contentDescription = "Echoer Logo",
                         modifier = Modifier
                             .height(80.dp)
                             .width(80.dp)
