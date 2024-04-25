@@ -304,10 +304,7 @@ fun ChatScreen(
                         isSentByMe = true, // 假设消息总是由用户自己发送
                         avatarUrl = R.drawable.ali
                     )
-                    // 要想查看前端内容，可以把下面这个 if 块注释掉
-                    if (deviceName != null && deviceAddress != null) {
-                        messageListener.sendMessage(deviceAddress, newMessage) // 调用接口方法
-                    }
+                    messageListener.sendMessage(newMessage) // 调用接口方法
                     // 滚动到新消息
                     coroutineScope.launch {
                         listState.animateScrollToItem(messages.size - 1)
