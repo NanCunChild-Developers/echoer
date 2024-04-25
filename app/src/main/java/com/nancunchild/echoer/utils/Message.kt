@@ -1,7 +1,9 @@
 package com.nancunchild.echoer.utils
 
+import java.util.UUID
+
 data class Message(
-    val id: String, // 消息的唯一标识符
+    val id: UUID, // 消息的唯一标识符
     val content: String, // 消息内容
     val author: String, // 发送者标识（例如用户名）
     val timestamp: String,//时间

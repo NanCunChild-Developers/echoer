@@ -1,15 +1,13 @@
 package com.nancunchild.echoer.fragments
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
-import androidx.activity.ComponentActivity
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,14 +26,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.InsertPhoto
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,9 +39,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,15 +56,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import com.nancunchild.echoer.activities.MainActivity
 import java.io.File
 import java.util.UUID
 import com.nancunchild.echoer.R
+import com.nancunchild.echoer.activities.ChatActivity
 import com.nancunchild.echoer.ui.theme.EchoerTheme
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.io.OutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -228,37 +222,6 @@ fun UserInput(
             }
             )
         }
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(8.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            TextField(
-//                value = text,
-//                onValueChange = { text = it },
-//                modifier = Modifier
-//                    .padding(start = 32.dp),
-//                singleLine = true, // 设置为单行输入模式
-//                placeholder = {
-//                    Text("请输入消息...") // 显示输入提示文本
-//                },
-//            )
-//            IconButton(
-//                onClick = {
-//                    if (text.isNotBlank()) { // 检查输入内容非空
-//                        onSend(text)
-//                        text = "" // 清空输入框
-//                    }
-//                }
-//            ) {
-//                Icon(
-//                    painter = painterResource(id = R.drawable.ic_send),
-//                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-//                    contentDescription = "Open Settings"
-//                )
-//            }
-//        }
 }
 
 
@@ -289,9 +252,7 @@ fun getCurrentTimeString(): String {
 }
 
 
-
 //展示和测试聊天界面
- @Preview(showBackground = true)     // 添加后可以在Studio中预览
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -299,6 +260,7 @@ fun ChatScreen(
     deviceAddress: String? = "Unknown",
     deviceName: String? = "Unknown",
     isDarkMode: Boolean = false,
+    messageListener: ChatActivity // 添加一个名为messageListener的参数
 ) {
     var messages by remember { mutableStateOf(listOf<Message>()) }
     val context = LocalContext.current // 获取当前Composable的Context
@@ -335,13 +297,17 @@ fun ChatScreen(
                 UserInput(onSend = { content ->
                     // 假设使用UUID生成唯一的消息ID，并假设所有消息都是由“我”发送的
                     val newMessage = Message(
-                        id = UUID.randomUUID().toString(),
+                        id = UUID.randomUUID(),
                         author = "Me",
                         content = content,
                         timestamp = getCurrentTimeString(),
                         isSentByMe = true, // 假设消息总是由用户自己发送
                         avatarUrl = R.drawable.ali
                     )
+                    if (deviceName != null && deviceAddress != null) {
+                        messageListener.sendMessage(deviceAddress, newMessage) // 调用接口方法
+                        Log.d("ChatScreen", "调用消息发送接口")
+                    }
                     // 滚动到新消息
                     coroutineScope.launch {
                         listState.animateScrollToItem(messages.size - 1)
@@ -363,11 +329,3 @@ fun ChatScreen(
         }
     }
 }
-
-
-
-
-
-
-
-

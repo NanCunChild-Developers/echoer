@@ -29,7 +29,6 @@ class ChatFragment : Fragment() {
                             Spacer(modifier = Modifier.weight(1f))
                             UserInput(onMessageSent = { /* ... */ })
                         }
-
                     }
                 }
             }
