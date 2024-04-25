@@ -1,20 +1,16 @@
 package com.nancunchild.echoer.ui_components
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
@@ -79,11 +75,6 @@ class SettingDrawer {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
-                    modifier = Modifier
-                        .border(
-                            shape = CircleShape,
-                            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurfaceVariant),
-                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     val image: Painter =
@@ -115,44 +106,11 @@ class SettingDrawer {
     @Composable
     fun DrawerBody(
         items: List<DrawerBodyItem>,
-        modifier: Modifier = Modifier,
-        itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
+//        modifier: Modifier = Modifier,
+//        itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
         onItemClick: (DrawerBodyItem) -> Unit
     ) {
         val selectedItem = remember { mutableStateOf<DrawerBodyItem?>(null) }
-
-//        // using Row
-//        LazyColumn(modifier) {
-//            items(items) { item ->
-//                val isSelected = selectedItem.value == item
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .clickable {
-//                            selectedItem.value = item
-//                            onItemClick(item)
-//                        }
-//                        .padding(16.dp)
-//                        .background(
-//                            if (isSelected) Color.LightGray else Color.Transparent,
-//                            RoundedCornerShape(4.dp)
-//                        ),
-//                ) {
-//                    Icon(
-//                        imageVector = item.icon,
-//                        contentDescription = item.contentDescription
-//                    )
-//                    Spacer(modifier = Modifier.width(16.dp))
-//                    Text(
-//                        text = item.title,
-//                        style = itemTextStyle,
-//                        modifier = Modifier.weight(1f)
-//                    )
-//                }
-//            }
-//        }
-
-        // using ListItem
 
         LazyColumn {
             items(

@@ -3,9 +3,7 @@ package com.nancunchild.echoer.fragments
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.content.Context
 import android.content.Intent
-import android.content.res.Resources.Theme
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
@@ -13,7 +11,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,8 +57,6 @@ import com.nancunchild.echoer.viewmodels.WiFiStatusViewModel
 import com.nancunchild.echoer.viewmodels.ScannerViewModel
 
 import androidx.compose.runtime.*
-import com.nancunchild.echoer.activities.ChatActivity
-import com.nancunchild.echoer.ui.theme.EchoerTheme
 import com.nancunchild.echoer.ui_components.SettingDrawer
 import kotlinx.coroutines.launch
 
@@ -161,8 +156,8 @@ class HomeFragment : ComponentActivity() {
                                 painter = image,
                                 contentDescription = "Echoer",
                                 modifier = Modifier
-                                    .height(64.dp)
-                                    .width(64.dp)
+                                    .height(108.dp)
+                                    .width(108.dp)
                             )
                             Text(
                                 text = "ECHOER",
