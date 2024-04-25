@@ -178,6 +178,3 @@ class MainActivity : ComponentActivity() {
         mBCScanner.stopScanning()
     }
 }
-
-
-

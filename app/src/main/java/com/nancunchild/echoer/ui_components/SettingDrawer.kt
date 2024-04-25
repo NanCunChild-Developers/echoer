@@ -75,7 +75,7 @@ class SettingDrawer {
                 .padding(vertical = 64.dp),
             contentAlignment = Alignment.Center
         ) {
-            Column (
+            Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
