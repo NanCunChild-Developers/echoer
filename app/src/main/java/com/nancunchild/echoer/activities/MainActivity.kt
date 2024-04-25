@@ -120,13 +120,6 @@ class MainActivity : ComponentActivity() {
                 HomeFragment().DoubleBackToExit(this)
                 HomeFragment().InitialScanning()
             }
-
-//            Button(onClick = {
-//                val intent = Intent(this@MainActivity, ChatActivity::class.java)
-//                startActivity(intent)
-//            }) {
-//                Text(text = "GoToChat(debug)")
-//            }
         }
     }
 
